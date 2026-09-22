@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Auditar Tickets — Bot</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Auditar tickets</h1>
+        <span class="subtitle" id="subtitle">Datos base desde la fuente activa · auditoría manual con desplegables</span>
+      </div>
+      <div class="topbar-actions">
+        <span id="sourceBadge" class="badge">fuente: —</span>
+        <a href="index.html" class="btn-primary">📊 Ver dashboard</a>
+        <button id="themeToggle" class="btn-ghost" title="Cambiar tema" aria-label="Cambiar tema">🌓</button>
+        <button id="refreshBtn" class="btn-ghost" title="Refrescar datos">⟳ Refrescar</button>
+      </div>
+    </header>
+
+    <section class="filters" aria-label="Filtros">
+      <div class="filter-group">
+        <label for="fromDate">Desde</label>
+        <input type="date" id="fromDate" />
+      </div>
+      <div class="filter-group">
+        <label for="toDate">Hasta</label>
+        <input type="date" id="toDate" />
+      </div>
+      <div class="filter-group">
+        <label for="categorySelect">Categoría</label>
+        <select id="categorySelect"><option value="">Todas</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="searchInput">Buscar ticket #</label>
+        <input type="text" id="searchInput" placeholder="ej: 148354" />
+      </div>
+      <button id="clearFilters" class="btn-link">Limpiar filtros</button>
+    </section>
+
+    <section class="audit-toolbar">
+      <label class="checkbox-label">
+        <input type="checkbox" id="pendingOnly" checked />
+        Mostrar solo pendientes de auditar
+      </label>
+      <div class="right">
+        <span id="auditCount" class="muted">—</span>
+      </div>
+    </section>
+
+    <section class="card table-card">
+      <div class="audit-table-wrap">
+        <table id="auditTable">
+          <thead>
+            <tr id="auditHeaderRow"></tr>
+          </thead>
+          <tbody id="auditBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Los campos base (fecha, tópico, complejidad, ticket) vienen automáticamente de la fuente activa. Los campos de auditoría se guardan al tocarlos, vía <code>PUT /api/tickets/:id/audit</code>.</span>
+    </footer>
+  </div>
+
+  <script src="js/audit.js"></script>
+</body>
+</html>

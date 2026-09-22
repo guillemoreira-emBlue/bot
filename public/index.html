@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard de Auditoría del Bot</title>
+<link rel="stylesheet" href="css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Auditoría del Bot</h1>
+        <span class="subtitle">Retención, errores y tópicos — datos vía API</span>
+      </div>
+      <div class="topbar-actions">
+        <span id="sourceBadge" class="badge">fuente: —</span>
+        <a href="audit.html" class="btn-primary">📝 Auditar tickets</a>
+        <button id="themeToggle" class="btn-ghost" title="Cambiar tema" aria-label="Cambiar tema">🌓</button>
+        <button id="refreshBtn" class="btn-ghost" title="Refrescar datos">⟳ Refrescar</button>
+      </div>
+    </header>
+
+    <section class="filters" aria-label="Filtros">
+      <div class="filter-group">
+        <label for="fromDate">Desde</label>
+        <input type="date" id="fromDate" />
+      </div>
+      <div class="filter-group">
+        <label for="toDate">Hasta</label>
+        <input type="date" id="toDate" />
+      </div>
+      <div class="filter-group">
+        <label for="categorySelect">Categoría</label>
+        <select id="categorySelect"><option value="">Todas</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="complexitySelect">Complejidad</label>
+        <select id="complexitySelect">
+          <option value="">Todas</option>
+          <option value="Basica">Básica</option>
+          <option value="Intermedia">Intermedia</option>
+          <option value="Avanzada">Avanzada</option>
+          <option value="Técnica">Técnica</option>
+        </select>
+      </div>
+      <button id="clearFilters" class="btn-link">Limpiar filtros</button>
+    </section>
+
+    <section class="kpis" id="kpiRow" aria-label="Indicadores clave">
+      <div class="kpi-card">
+        <span class="kpi-label">Tickets totales</span>
+        <span class="kpi-value" id="kpiTotal">—</span>
+        <span class="kpi-sub" id="kpiRange">—</span>
+      </div>
+      <div class="kpi-card" id="kpiPendingCard">
+        <span class="kpi-label">Pendientes de auditar</span>
+        <span class="kpi-value" id="kpiPending">—</span>
+        <a href="audit.html" class="kpi-sub kpi-link">ir a auditar →</a>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Retención</span>
+        <span class="kpi-value" id="kpiRetention">—</span>
+        <span class="kpi-sub">resuelto sin escalar (sobre lo auditado)</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Respuestas correctas</span>
+        <span class="kpi-value" id="kpiCorrect">—</span>
+        <span class="kpi-sub" id="kpiCorrectSub">—</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Con error</span>
+        <span class="kpi-value" id="kpiError">—</span>
+        <span class="kpi-sub">excluye "TU" (sin error)</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card card-wide">
+        <div class="card-header">
+          <h2>Evolución semanal</h2>
+          <div class="legend-inline" id="tsLegend"></div>
+        </div>
+        <canvas id="timeseriesChart" height="90"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2>Finalización de chats</h2></div>
+        <canvas id="completionChart" height="220"></canvas>
+        <div class="legend-inline" id="completionLegend"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2>Tipos de error</h2></div>
+        <canvas id="errorChart" height="220"></canvas>
+      </div>
+
+      <div class="card card-wide">
+        <div class="card-header"><h2>Tópicos más consultados</h2></div>
+        <canvas id="topicsChart" height="160"></canvas>
+      </div>
+    </section>
+
+    <section class="card table-card">
+      <div class="card-header">
+        <h2>Tickets</h2>
+        <span id="tableCount" class="muted">—</span>
+      </div>
+      <div class="table-scroll">
+        <table id="ticketsTable">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Categoría</th>
+              <th>Complejidad</th>
+              <th>Ticket</th>
+              <th>Tenía info</th>
+              <th>Respondió bien</th>
+              <th>Finalización</th>
+              <th>Error</th>
+            </tr>
+          </thead>
+          <tbody id="ticketsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Datos servidos por <code>/api</code> — ver <code>README.md</code> para conectar Zoho o Chatbase.</span>
+    </footer>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
