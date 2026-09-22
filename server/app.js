@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const apiRouter = require('./routes/api');
+const basicAuth = require('./middleware/basicAuth');
 
 /**
  * La app de Express en sí, SIN app.listen(). Se separa de server/index.js
@@ -20,6 +21,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Login compartido para todo el sitio (dashboard, auditoría y API). Se
+// activa solo si AUTH_USER y AUTH_PASS están configuradas — ver
+// server/middleware/basicAuth.js.
+app.use(basicAuth);
 
 // API REST — esta es la capa que consumen Zoho/Chatbase (o cualquier otra
 // herramienta, o un frontend distinto) sin tocar nada del resto.

@@ -214,7 +214,32 @@ compu, mientras tanto, sigue usando `server/data/audits.json` sin que
 tengas que cambiar nada — el switch es automático según si esa variable de
 entorno existe o no.
 
-### 5.4. Actualizaciones después del primer deploy
+### 5.4. Protegerlo con usuario y contraseña
+
+Por defecto la URL de Vercel queda pública: cualquiera con el link entra al
+dashboard y a la auditoría. Para pedir login antes de mostrar nada (todo el
+sitio, incluida la API), la app ya trae un login simple compartido —
+`server/middleware/basicAuth.js` — que se activa solo con dos variables de
+entorno:
+
+1. En Vercel: **Settings → Environment Variables** del proyecto.
+2. Agregá `AUTH_USER` (el usuario que van a usar) y `AUTH_PASS` (la
+   contraseña) — elegí valores propios, no hace falta que coincidan con tu
+   cuenta de GitHub ni de Vercel.
+3. **Deployments** → Redeploy del último deploy.
+
+A partir de ahí, al entrar a la URL el navegador va a mostrar el cuadro de
+login típico del sistema (usuario/contraseña) antes de dejar ver nada. Es un
+único usuario compartido para todo el equipo — alcanza para que no quede
+abierto a cualquiera de internet, pero no distingue quién audita cada
+ticket (eso ya se ve por separado en cada fila, en la fecha `updatedAt` que
+guarda cada auditoría).
+
+Corriendo local (`npm start`) esto NO pide login a menos que vos mismo
+completes `AUTH_USER` y `AUTH_PASS` en tu `.env` — si las dejás vacías,
+sigue andando como hasta ahora.
+
+### 5.5. Actualizaciones después del primer deploy
 
 Cualquier `git push` a la rama `main` dispara un deploy nuevo solo. Para
 correr localmente después de bajar cambios: `git pull && npm install`.
@@ -238,6 +263,7 @@ bot-audit-dashboard/
 │   ├── app.js                      la app de Express (rutas + estáticos, sin listen)
 │   ├── index.js                    la levanta con app.listen() para correr local
 │   ├── routes/api.js               endpoints /api/*
+│   ├── middleware/basicAuth.js     login compartido (AUTH_USER/AUTH_PASS)
 │   ├── config/auditOptions.js      opciones de cada desplegable de auditoría
 │   ├── lib/
 │   │   ├── metrics.js              cálculos (retención, errores, etc.)
